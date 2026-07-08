@@ -11,8 +11,8 @@
 	<groupId>com.clinichub</groupId>
 	<artifactId>clinichub</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name/>
-	<description/>
+	<name>clinichub</name>
+	<description>Intelligent Medical Clinic Management System</description>
 	<url/>
 	<licenses>
 		<license/>
@@ -73,6 +73,11 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-webmvc-test</artifactId>
 			<scope>test</scope>
+		</dependency>
+		<dependency>
+    		<groupId>org.springframework.boot</groupId>
+    		<artifactId>spring-boot-starter-test</artifactId>
+    		<scope>test</scope>
 		</dependency>
 	</dependencies>
 
