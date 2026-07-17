@@ -7,6 +7,8 @@ import org.springframework.stereotype.Service;
 import com.clinichub.dto.MedicalRecordRequestDTO;
 import com.clinichub.dto.MedicalRecordResponseDTO;
 import com.clinichub.dto.MedicalRecordUpdateDTO;
+import com.clinichub.exception.BusinessRuleException;
+import com.clinichub.exception.ResourceNotFoundException;
 import com.clinichub.mapper.MedicalRecordMapper;
 import com.clinichub.model.Appointment;
 import com.clinichub.model.MedicalRecord;
@@ -28,10 +30,10 @@ public class MedicalRecordService {
     public MedicalRecordResponseDTO create(MedicalRecordRequestDTO dto) {
 
         Appointment appointment = appointmentRepository.findById(dto.appointmentId())
-        .orElseThrow(() -> new RuntimeException("Appointment not found"));
+        .orElseThrow(() -> new ResourceNotFoundException("Appointment not found"));
 
         if (appointment.getStatus() != Appointment.Status.COMPLETED) {
-            throw new RuntimeException
+            throw new BusinessRuleException
             ("Medical record can only be created for completed appointments");
         }
 
@@ -44,7 +46,7 @@ public class MedicalRecordService {
 
     public MedicalRecordResponseDTO getById(Long id) {
         MedicalRecord medicalRecord = medicalRecordRepository.findById(id)
-        .orElseThrow(() -> new RuntimeException("Medical Record not found"));
+        .orElseThrow(() -> new ResourceNotFoundException("Medical Record not found"));
 
         return MedicalRecordMapper.toResponseDTO(medicalRecord);
     }
@@ -58,7 +60,7 @@ public class MedicalRecordService {
 
     public MedicalRecordResponseDTO update(Long id, MedicalRecordUpdateDTO dto) {
         MedicalRecord medicalRecord = medicalRecordRepository.findById(id)
-        .orElseThrow(() -> new RuntimeException("Medical record not found"));
+        .orElseThrow(() -> new ResourceNotFoundException("Medical record not found"));
 
         medicalRecord.setDescription(dto.description());
 
@@ -68,7 +70,7 @@ public class MedicalRecordService {
 
     public void delete(Long id) {
         MedicalRecord medicalRecord = medicalRecordRepository.findById(id)
-        .orElseThrow(() -> new RuntimeException("MedicalRecord not found"));
+        .orElseThrow(() -> new ResourceNotFoundException("MedicalRecord not found"));
 
        medicalRecordRepository.delete(medicalRecord);
     }

@@ -5,6 +5,8 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import com.clinichub.dto.UserRequestDTO;
 import com.clinichub.dto.UserResponseDTO;
+import com.clinichub.exception.BusinessRuleException;
+import com.clinichub.exception.ResourceNotFoundException;
 import com.clinichub.mapper.UserMapper;
 import com.clinichub.model.User;
 import com.clinichub.repository.UserRepository;
@@ -20,7 +22,7 @@ public class UserService {
 
     public UserResponseDTO create(UserRequestDTO dto) {
         if (userRepository.findByEmail(dto.email()).isPresent()) {
-            throw new RuntimeException("This email is already registered");
+            throw new BusinessRuleException("This email is already registered");
         }
 
         User user = UserMapper.toEntity(dto);
@@ -30,7 +32,7 @@ public class UserService {
 
     public UserResponseDTO getById(Long id) {
         User user = userRepository.findById(id)
-        .orElseThrow(() -> new RuntimeException("User not found"));
+        .orElseThrow(() -> new ResourceNotFoundException("User not found"));
 
         return UserMapper.toResponseDTO(user);
     }
@@ -44,7 +46,7 @@ public class UserService {
 
     public UserResponseDTO update(Long id, UserRequestDTO dto) {
         User user = userRepository.findById(id)
-        .orElseThrow(() -> new RuntimeException("User not found"));
+        .orElseThrow(() -> new ResourceNotFoundException("User not found"));
 
         user.setName(dto.name());
         user.setEmail(dto.email());
@@ -55,7 +57,7 @@ public class UserService {
 
     public void delete(Long id) {
         User user = userRepository.findById(id)
-        .orElseThrow(() -> new RuntimeException("User not found"));
+        .orElseThrow(() -> new ResourceNotFoundException("User not found"));
 
         userRepository.delete(user);
     }

@@ -6,6 +6,8 @@ import org.springframework.stereotype.Service;
 
 import com.clinichub.dto.DoctorRequestDTO;
 import com.clinichub.dto.DoctorResponseDTO;
+import com.clinichub.exception.BusinessRuleException;
+import com.clinichub.exception.ResourceNotFoundException;
 import com.clinichub.mapper.DoctorMapper;
 import com.clinichub.model.Doctor;
 import com.clinichub.model.Specialty;
@@ -31,14 +33,14 @@ public class DoctorService {
 
     public DoctorResponseDTO create(DoctorRequestDTO dto) {
         if (doctorRepository.findByCrm(dto.crm()).isPresent()) {
-            throw new RuntimeException("This CRM is already registered");
+            throw new BusinessRuleException("This CRM is already registered");
         }
 
         User user = userRepository.findById(dto.userId())
-        .orElseThrow(() -> new RuntimeException("User not found"));
+        .orElseThrow(() -> new ResourceNotFoundException("User not found"));
 
         Specialty specialty = specialtyRepository.findById(dto.specialtyId())
-        .orElseThrow(() -> new RuntimeException("Specialty not found"));
+        .orElseThrow(() -> new ResourceNotFoundException("Specialty not found"));
 
         Doctor doctor = DoctorMapper.toEntity(dto);
         doctor.setUser(user);
@@ -50,7 +52,7 @@ public class DoctorService {
 
     public DoctorResponseDTO getById(Long id) {
         Doctor doctor = doctorRepository.findById(id)
-        .orElseThrow(() -> new RuntimeException("Doctor not found"));
+        .orElseThrow(() -> new ResourceNotFoundException("Doctor not found"));
 
         return DoctorMapper.toResponseDTO(doctor);
     }
@@ -64,10 +66,10 @@ public class DoctorService {
 
     public DoctorResponseDTO update(Long id, DoctorRequestDTO dto) {
         Doctor doctor = doctorRepository.findById(id)
-        .orElseThrow(() -> new RuntimeException("Doctor not found"));
+        .orElseThrow(() -> new ResourceNotFoundException("Doctor not found"));
 
         Specialty specialty = specialtyRepository.findById(dto.specialtyId())
-        .orElseThrow(() -> new RuntimeException("Specialty not found"));
+        .orElseThrow(() -> new ResourceNotFoundException("Specialty not found"));
 
         doctor.setSpecialty(specialty);
 
@@ -77,7 +79,7 @@ public class DoctorService {
 
     public void delete(Long id) {
         Doctor doctor = doctorRepository.findById(id)
-        .orElseThrow(() -> new RuntimeException("Doctor not found"));
+        .orElseThrow(() -> new ResourceNotFoundException("Doctor not found"));
 
         doctorRepository.delete(doctor);
     }

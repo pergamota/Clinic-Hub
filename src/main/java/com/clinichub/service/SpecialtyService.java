@@ -6,6 +6,8 @@ import org.springframework.stereotype.Service;
 
 import com.clinichub.dto.SpecialtyRequestDTO;
 import com.clinichub.dto.SpecialtyResponseDTO;
+import com.clinichub.exception.BusinessRuleException;
+import com.clinichub.exception.ResourceNotFoundException;
 import com.clinichub.mapper.SpecialtyMapper;
 import com.clinichub.model.Specialty;
 import com.clinichub.repository.SpecialtyRepository;
@@ -21,7 +23,7 @@ public class SpecialtyService {
 
     public SpecialtyResponseDTO create(SpecialtyRequestDTO dto) {
         if (specialtyRepository.findByName(dto.name()).isPresent()) {
-            throw new RuntimeException("Specialty name already exists");
+            throw new BusinessRuleException("Specialty name already exists");
         }
 
         Specialty specialty = SpecialtyMapper.toEntity(dto);
@@ -32,7 +34,7 @@ public class SpecialtyService {
 
     public SpecialtyResponseDTO getById(Long id) {
         Specialty specialty = specialtyRepository.findById(id)
-        .orElseThrow(() -> new RuntimeException("Specialty not found"));
+        .orElseThrow(() -> new ResourceNotFoundException("Specialty not found"));
 
         return SpecialtyMapper.toResponseDTO(specialty);
     }
@@ -46,7 +48,7 @@ public class SpecialtyService {
 
     public SpecialtyResponseDTO update(Long id, SpecialtyRequestDTO dto) {
         Specialty specialty = specialtyRepository.findById(id)
-        .orElseThrow(() -> new RuntimeException("Specialty not found"));
+        .orElseThrow(() -> new ResourceNotFoundException("Specialty not found"));
 
         specialty.setName(dto.name());
 
@@ -56,7 +58,7 @@ public class SpecialtyService {
 
     public void delete(Long id) {
         Specialty specialty = specialtyRepository.findById(id)
-        .orElseThrow(() -> new RuntimeException("Specialty not found"));
+        .orElseThrow(() -> new ResourceNotFoundException("Specialty not found"));
 
         specialtyRepository.delete(specialty);
     }
