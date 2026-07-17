@@ -8,6 +8,8 @@ import org.springframework.stereotype.Service;
 import com.clinichub.dto.AppointmentRequestDTO;
 import com.clinichub.dto.AppointmentResponseDTO;
 import com.clinichub.dto.AppointmentStatusUpdateDTO;
+import com.clinichub.exception.BusinessRuleException;
+import com.clinichub.exception.ResourceNotFoundException;
 import com.clinichub.mapper.AppointmentMapper;
 import com.clinichub.model.Appointment;
 import com.clinichub.model.Doctor;
@@ -34,14 +36,14 @@ public class AppointmentService {
 
     public AppointmentResponseDTO create(AppointmentRequestDTO dto) {
         if (dto.appointmentDate().isBefore(LocalDateTime.now())) {
-            throw new RuntimeException("Appointments cannot be scheduled in the past");
+            throw new BusinessRuleException("Appointments cannot be scheduled in the past");
         }
 
         Doctor doctor = doctorRepository.findById(dto.doctorId())
-        .orElseThrow(() -> new RuntimeException("Doctor not found"));
+        .orElseThrow(() -> new ResourceNotFoundException("Doctor not found"));
 
         Patient patient = patientRepository.findById(dto.patientId())
-        .orElseThrow(() -> new RuntimeException("Patient not found"));
+        .orElseThrow(() -> new ResourceNotFoundException("Patient not found"));
 
         Appointment appointment = AppointmentMapper.toEntity(dto);
         appointment.setDoctor(doctor);
@@ -54,7 +56,7 @@ public class AppointmentService {
 
     public AppointmentResponseDTO getById(Long id) {
         Appointment appointment = appointmentRepository.findById(id)
-        .orElseThrow(() -> new RuntimeException("Appointment not found"));
+        .orElseThrow(() -> new ResourceNotFoundException("Appointment not found"));
 
         return AppointmentMapper.toResponseDTO(appointment);
     }
@@ -68,7 +70,7 @@ public class AppointmentService {
 
     public AppointmentResponseDTO update(Long id, AppointmentStatusUpdateDTO dto) {
         Appointment appointment = appointmentRepository.findById(id)
-        .orElseThrow(() -> new RuntimeException("Appointment not found"));
+        .orElseThrow(() -> new ResourceNotFoundException("Appointment not found"));
 
         appointment.setStatus(dto.status());
 
@@ -78,7 +80,7 @@ public class AppointmentService {
 
     public void delete(Long id) {
         Appointment appointment = appointmentRepository.findById(id)
-        .orElseThrow(() -> new RuntimeException("Appointment not found"));
+        .orElseThrow(() -> new ResourceNotFoundException("Appointment not found"));
 
         appointmentRepository.delete(appointment);
     }
