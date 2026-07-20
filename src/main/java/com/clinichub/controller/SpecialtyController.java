@@ -3,6 +3,7 @@ package com.clinichub.controller;
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -28,12 +29,10 @@ public class SpecialtyController {
         this.specialtyService = specialtyService;
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
-    public ResponseEntity<SpecialtyResponseDTO> create
-        (@Valid @RequestBody SpecialtyRequestDTO dto) 
-    {
-        return ResponseEntity.status(201).body
-        (specialtyService.create(dto));
+    public ResponseEntity<SpecialtyResponseDTO> create(@Valid @RequestBody SpecialtyRequestDTO dto) {
+        return ResponseEntity.status(201).body(specialtyService.create(dto));
     }
 
     @GetMapping("/{id}")
@@ -49,6 +48,7 @@ public class SpecialtyController {
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<SpecialtyResponseDTO> update
         (@PathVariable Long id,
         @Valid @RequestBody SpecialtyRequestDTO dto) {
@@ -57,6 +57,7 @@ public class SpecialtyController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         specialtyService.delete(id);
         return ResponseEntity.noContent().build();

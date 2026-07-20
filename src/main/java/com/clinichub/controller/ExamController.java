@@ -3,6 +3,7 @@ package com.clinichub.controller;
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -29,6 +30,7 @@ public class ExamController {
         this.examService = examService;
     }
 
+    @PreAuthorize("hasRole('DOCTOR') or hasRole('ADMIN')") 
     @PostMapping
     public ResponseEntity<ExamResponseDTO> create
         (@Valid @RequestBody ExamRequestDTO dto) 
@@ -49,6 +51,7 @@ public class ExamController {
         return ResponseEntity.ok(examService.getAll());
     }
 
+    @PreAuthorize("hasRole('DOCTOR') or hasRole('ADMIN')") 
     @PutMapping("/{id}")
     public ResponseEntity<ExamResponseDTO> update
         (@PathVariable Long id,
@@ -57,6 +60,7 @@ public class ExamController {
         return ResponseEntity.ok(examService.update(id, dto));
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         examService.delete(id);

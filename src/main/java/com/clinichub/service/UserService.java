@@ -2,7 +2,10 @@ package com.clinichub.service;
 
 import java.util.List;
 
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import com.clinichub.dto.ChangePasswordDTO;
 import com.clinichub.dto.UserRequestDTO;
 import com.clinichub.dto.UserResponseDTO;
 import com.clinichub.exception.BusinessRuleException;
@@ -15,9 +18,13 @@ import com.clinichub.repository.UserRepository;
 public class UserService {
     
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
     
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository,
+        PasswordEncoder passwordEncoder
+    ) { 
         this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public UserResponseDTO create(UserRequestDTO dto) {
@@ -26,6 +33,7 @@ public class UserService {
         }
 
         User user = UserMapper.toEntity(dto);
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         User saved = userRepository.save(user);
         return UserMapper.toResponseDTO(saved);
     }
@@ -44,9 +52,27 @@ public class UserService {
         .toList();
     }
 
+    public void changePassword(Long id, ChangePasswordDTO dto) {
+        User user = userRepository.findById(id)
+        .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+
+        if (!passwordEncoder.matches(dto.currentPassword(), user.getPassword())) {
+            throw new BusinessRuleException("Current password is incorrect");
+        }
+
+        user.setPassword(passwordEncoder.encode(dto.newPassword()));
+        userRepository.save(user);
+    }
+
     public UserResponseDTO update(Long id, UserRequestDTO dto) {
         User user = userRepository.findById(id)
         .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+
+        userRepository.findByEmail(dto.email())
+        .filter(existingUser -> !existingUser.getId().equals(id))
+        .ifPresent(existingUser -> {
+            throw new BusinessRuleException("This email is already registered");
+        });
 
         user.setName(dto.name());
         user.setEmail(dto.email());
