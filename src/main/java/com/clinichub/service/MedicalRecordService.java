@@ -1,5 +1,6 @@
 package com.clinichub.service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -38,7 +39,8 @@ public class MedicalRecordService {
         }
 
         MedicalRecord medicalRecord = MedicalRecordMapper.toEntity(dto);
-        medicalRecord.setAppointment(appointment);
+        medicalRecord.setAppointment(appointment);  
+        medicalRecord.setCreatedAt(LocalDateTime.now());
 
         MedicalRecord saved = medicalRecordRepository.save(medicalRecord);
         return MedicalRecordMapper.toResponseDTO(saved);
