@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ClinicHub</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div class="container">
+    <div class="wrapper">
+        <div id="header"></div>
+
+        <main class="main-content">
+            <div class="role-select">
+                <h1>ClinicHub</h1>
+                <p>Selecione seu perfil para entrar</p>
+                <button class="dashboard-btn role-btn" data-role="ADMIN" type="button">Administrador</button>
+                <button class="dashboard-btn role-btn" data-role="DOCTOR" type="button">Medico</button>
+                <button class="dashboard-btn role-btn" data-role="PATIENT" type="button">Paciente</button>
+            </div>
+        </main>
+
+        <div id="footer"></div>
+    </div>
+</div>
+
+<div id="modal" class="modal">
+    <div class="modal-content">
+        <span class="close" id="closeModal">&times;</span>
+        <div id="modal-body"></div>
+    </div>
+</div>
+
+<script src="js/config.js"></script>
+<script src="js/utils.js"></script>
+<script src="js/components/header.js"></script>
+<script src="js/components/footer.js"></script>
+<script src="js/components/modal.js"></script>
+<script src="js/components/toast.js"></script>
+<script src="js/services/authService.js"></script>
+<script src="js/services/userService.js"></script>
+<script src="js/services/doctorService.js"></script>
+<script src="js/services/patientService.js"></script>
+<script src="js/pages/index.js"></script>
+</body>
+</html>

@@ -2,6 +2,7 @@ package com.clinichub.controller;
 
 import java.util.List;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -27,7 +28,8 @@ public class UserController {
     public UserController(UserService userService) {
         this.userService = userService;
     }
-
+    
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
     public ResponseEntity<UserResponseDTO> create
         (@Valid @RequestBody UserRequestDTO dto) 
@@ -48,6 +50,7 @@ public class UserController {
         return ResponseEntity.ok(userService.getAll());
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/{id}")
     public ResponseEntity<UserResponseDTO> update
         (@PathVariable Long id,
@@ -56,6 +59,7 @@ public class UserController {
         return ResponseEntity.ok(userService.update(id, dto));
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         userService.delete(id);
