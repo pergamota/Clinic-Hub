@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ClinicHub - Admin</title>
+<link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+
+<div class="container">
+    <div class="wrapper">
+        <div id="header"></div>
+
+        <main class="main-content">
+            <div class="section-header">
+                <h2>Painel do Administrador</h2>
+            </div>
+
+            <div class="filter-bar">
+                <button class="dashboard-btn tab-btn" data-tab="specialties" type="button" style="width:auto">Especialidades</button>
+                <button class="dashboard-btn tab-btn" data-tab="doctors" type="button" style="width:auto">Medicos</button>
+                <button class="dashboard-btn tab-btn" data-tab="patients" type="button" style="width:auto">Pacientes</button>
+                <button class="dashboard-btn tab-btn" data-tab="users" type="button" style="width:auto">Usuarios</button>
+                <button class="dashboard-btn tab-btn" data-tab="appointments" type="button" style="width:auto">Consultas</button>
+            </div>
+
+            <div class="section-header">
+                <h2 id="tabTitle"></h2>
+                <button id="createBtn" class="dashboard-btn" type="button" style="width:auto">+ Novo</button>
+            </div>
+
+            <div id="content"></div>
+        </main>
+
+        <div id="footer"></div>
+    </div>
+</div>
+
+<div id="modal" class="modal">
+    <div class="modal-content">
+        <span class="close" id="closeModal">&times;</span>
+        <div id="modal-body"></div>
+    </div>
+</div>
+
+<script src="../js/config.js"></script>
+<script src="../js/utils.js"></script>
+<script src="../js/components/header.js"></script>
+<script src="../js/components/footer.js"></script>
+<script src="../js/components/modal.js"></script>
+<script src="../js/components/toast.js"></script>
+<script src="../js/services/authService.js"></script>
+<script src="../js/services/userService.js"></script>
+<script src="../js/services/doctorService.js"></script>
+<script src="../js/services/patientService.js"></script>
+<script src="../js/services/specialtyService.js"></script>
+<script src="../js/services/appointmentService.js"></script>
+<script src="../js/pages/adminDashboard.js"></script>
+</body>
+</html>
