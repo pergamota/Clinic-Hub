@@ -35,8 +35,20 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(DataIntegrityViolationException.class)
     public ResponseEntity<ErrorResponse> handleDataIntegrity(DataIntegrityViolationException ex) {
-        ErrorResponse error = new ErrorResponse(LocalDateTime.now(),
-        409, "This record violates a uniqueness constraint");
+        String detail = ex.getRootCause() != null
+        ? ex.getRootCause().getMessage().toLowerCase()
+        : "";
+
+        String message;
+        if (detail.contains("duplicate entry")) {
+        message = "This value already exists and must be unique (email, CPF or CRM).";
+        } else if (detail.contains("foreign key constraint")) {
+            message = "This record cannot be deleted because other records still depend on it.";
+        } else {
+            message = "This operation violates a database integrity constraint.";
+        }
+
+        ErrorResponse error = new ErrorResponse(LocalDateTime.now(), 409, message);
         return ResponseEntity.status(HttpStatus.CONFLICT).body(error);
     }
 
