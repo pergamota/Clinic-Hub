@@ -166,10 +166,11 @@ function openDoctorForm(id) {
         <form id="entityForm">
             <div class="form-group">
                 <label for="userId">Usuario</label>
-                <select class="input-field" id="userId" required>
+                <select class="input-field" id="userId" required ${doctor ? 'disabled' : ''}>
                     <option value="">Selecione...</option>
                     ${doctorUsers.map(u => `<option value="${u.id}" ${doctor && doctor.userId === u.id ? 'selected' : ''}>${u.name} (${u.email})</option>`).join('')}
                 </select>
+                ${doctor ? '<p style="font-size:13px;color:#777;margin-top:4px;">O usuario vinculado nao pode ser trocado apos a criacao.</p>' : ''}
             </div>
             <div class="form-group">
                 <label for="crm">CRM</label>
@@ -190,7 +191,7 @@ function openDoctorForm(id) {
     document.getElementById('entityForm').addEventListener('submit', async (event) => {
         event.preventDefault();
         const dto = {
-            userId: Number(document.getElementById('userId').value),
+            userId: doctor ? doctor.userId : Number(document.getElementById('userId').value),
             crm: document.getElementById('crm').value,
             specialtyId: Number(document.getElementById('specialtyId').value)
         };
