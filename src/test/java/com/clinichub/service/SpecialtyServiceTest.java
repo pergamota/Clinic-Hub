@@ -147,6 +147,13 @@ public class SpecialtyServiceTest {
         verify(specialtyRepository).delete(specialty);
     }
 
+    @Test
+    void shouldThrowExceptionWhenDeletingNonExistentSpecialty() {
+        when(specialtyRepository.findById(1L)).thenReturn(Optional.empty());
+
+        assertThrows(ResourceNotFoundException.class, () -> specialtyService.delete(1L));
+    }
+
 
 
 
