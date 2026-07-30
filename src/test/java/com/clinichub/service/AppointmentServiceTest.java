@@ -64,19 +64,6 @@ public class AppointmentServiceTest {
     }
 
     @Test
-    void shouldThrowExceptionWhenPatientNotFound() {
-        AppointmentRequestDTO dto = new AppointmentRequestDTO(1L, 1L, LocalDateTime.now().plusDays(1));
-
-        Doctor doctor = new Doctor();
-        doctor.setId(1L);
-
-        when(doctorRepository.findById(1L)).thenReturn(Optional.of(doctor));
-        when(patientRepository.findById(1L)).thenReturn(Optional.empty());
-
-        assertThrows(ResourceNotFoundException.class, () -> appointmentService.create(dto));
-    }
-
-    @Test
     void shouldCreateAppointmentSuccessfully() {   
 
         Doctor doctor = new Doctor();

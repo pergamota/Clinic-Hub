@@ -17,8 +17,13 @@ import com.clinichub.dto.SpecialtyRequestDTO;
 import com.clinichub.dto.SpecialtyResponseDTO;
 import com.clinichub.service.SpecialtyService;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 
+@Tag(name = "Specialties", description = "Manage medical specialties")
 @RestController
 @RequestMapping("/api/specialties")
 public class SpecialtyController {
@@ -29,12 +34,23 @@ public class SpecialtyController {
         this.specialtyService = specialtyService;
     }
 
+    @Operation(summary = "Create a new specialty", description = "Requires ADMIN role")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "201", description = "Specialty created successfully"),
+        @ApiResponse(responseCode = "400", description = "Validation error"),
+        @ApiResponse(responseCode = "409", description = "Specialty name already exists")
+    })
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
     public ResponseEntity<SpecialtyResponseDTO> create(@Valid @RequestBody SpecialtyRequestDTO dto) {
         return ResponseEntity.status(201).body(specialtyService.create(dto));
     }
 
+    @Operation(summary = "Get a specialty by id")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Specialty found"),
+        @ApiResponse(responseCode = "404", description = "Specialty not found")
+    })
     @GetMapping("/{id}")
     public ResponseEntity<SpecialtyResponseDTO> getById
         (@PathVariable Long id) 
@@ -42,11 +58,21 @@ public class SpecialtyController {
         return ResponseEntity.ok(specialtyService.getById(id));
     }
 
+    @Operation(summary = "List all specialties")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "List returned successfully")
+    })
     @GetMapping
     public ResponseEntity<List<SpecialtyResponseDTO>> getAll() {
         return ResponseEntity.ok(specialtyService.getAll());
     }
 
+    @Operation(summary = "Update an existing specialty", description = "Requires ADMIN role")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Specialty updated successfully"),
+        @ApiResponse(responseCode = "400", description = "Validation error"),
+        @ApiResponse(responseCode = "404", description = "Specialty not found")
+    })
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<SpecialtyResponseDTO> update
@@ -56,6 +82,11 @@ public class SpecialtyController {
         return ResponseEntity.ok(specialtyService.update(id, dto));
     }
 
+    @Operation(summary = "Delete a specialty", description = "Requires ADMIN role")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "204", description = "Specialty deleted successfully"),
+        @ApiResponse(responseCode = "404", description = "Specialty not found")
+    })
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> delete(@PathVariable Long id) {

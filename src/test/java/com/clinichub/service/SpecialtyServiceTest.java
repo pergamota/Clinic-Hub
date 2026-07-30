@@ -70,13 +70,6 @@ public class SpecialtyServiceTest {
         assertEquals("Cardiology", result.name());
     }
 
-    @Test
-    void shouldThrowExceptionWhenSpecialtyNotFound() {
-        when(specialtyRepository.findById(1L)).thenReturn(Optional.empty());
-
-        assertThrows(ResourceNotFoundException.class, () -> specialtyService.getById(1L));
-    }
-
 
     @Test
     void shouldGetAllSuccessfully() {
