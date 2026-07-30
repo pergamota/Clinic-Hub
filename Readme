@@ -1,0 +1,179 @@
+# ClinicHub
+
+Intelligent Medical Clinic Management System — a full-stack Java/Spring Boot
+application simulating appointment scheduling, medical records, and exam
+management for a real clinic. Built as a portfolio project covering the full
+lifecycle of a professional Java application: modeling, REST API, security,
+containerization, testing, and documentation.
+
+## Status
+
+Core features complete — actively evolving.
+
+## Tech Stack
+
+**Backend:** Java 21 · Spring Boot 4 · Spring Security · Spring Data JPA · Hibernate
+**Database:** MySQL 8
+**Frontend:** HTML · CSS · Vanilla JavaScript (ES Modules)
+**Auth:** JWT (JSON Web Token)
+**API Docs:** OpenAPI / Swagger
+**DevOps:** Docker · Docker Compose
+**Testing:** JUnit 5 · Mockito
+**Build:** Maven
+
+## Features
+
+- Role-based authentication (`ADMIN`, `DOCTOR`, `PATIENT`) with JWT
+- Full CRUD for specialties, users, patients, doctors, appointments,
+  medical records, and exams
+- Business rule enforcement at the service layer, e.g.:
+  - Unique email, CPF, and CRM
+  - Appointments cannot be scheduled in the past
+  - Medical records can only be created for completed appointments
+  - A user's role is immutable after creation
+- Global exception handling with consistent, typed error responses
+  (404 / 409 / 400 / 401)
+- Interactive API documentation via Swagger UI
+- Three role-based dashboards (Admin, Doctor, Patient) consuming the REST API
+- Containerized with Docker Compose (application + MySQL, with healthcheck-based
+  startup ordering)
+- Unit test coverage (JUnit 5 + Mockito) for the service layer, including
+  business rule validation
+
+## Architecture
+
+Layered architecture: `Controller → Service → Repository`, with DTOs at the
+API boundary and dedicated Mappers translating between entities and DTOs.
+Entities are never exposed directly through the API.
+
+```
+Client (Postman / Frontend)
+        │
+        ▼
+   Controller          → HTTP concerns, validation trigger, status codes
+        │
+        ▼
+   Service              → business rules, orchestration, transactions
+        │
+        ▼
+   Repository           → persistence (Spring Data JPA)
+        │
+        ▼
+   MySQL
+```
+
+Authentication is stateless: a `JwtAuthenticationFilter` validates the
+`Authorization: Bearer <token>` header on every request, and role-based
+authorization is enforced with `@PreAuthorize` at the controller level.
+
+Full project documentation — requirements, use cases, business rules,
+conceptual and logical data models, and the development roadmap — is
+available in [`docs/`](./docs).
+
+
+## Screenshots
+
+| Role Selection | Admin Dashboard |
+|---|---|
+![Role selection](docs/images/screenshots/Login.png) | ![Admin dashboard](docs/images/screenshots/Dashboard ADMIN.png)
+
+| Doctor Dashboard | Patient Dashboard |
+|---|---|
+![Doctor dashboard](docs/images/screenshots/Dashboard Doctor.png) | ![Patient dashboard](docs/images/screenshots/Dashboard Patient.png) 
+
+## Entity Overview
+
+| Entity | Relationship |
+|---|---|
+| `User` | Base account (email, password, role) |
+| `Patient` | 1:1 with `User` |
+| `Doctor` | 1:1 with `User`, N:1 with `Specialty` |
+| `Specialty` | Referenced by `Doctor` |
+| `Appointment` | N:1 with `Patient` and `Doctor` |
+| `MedicalRecord` | 1:1 with `Appointment` |
+| `Exam` | N:1 with `Appointment` |
+
+## Running Locally
+
+### With Docker (recommended)
+
+```bash
+git clone https://github.com/pergamota/Clinic-Hub.git
+cd Clinic-Hub
+docker compose up --build
+```
+
+- Application: `http://localhost:8080`
+- Swagger UI: `http://localhost:8080/swagger-ui.html`
+
+The `docker-compose.yml` spins up the application and a MySQL container
+together, with a healthcheck ensuring the app only starts once the
+database is ready to accept connections.
+
+### Without Docker
+
+Requires Java 21, Maven, and a running local MySQL instance.
+
+```sql
+CREATE DATABASE clinichub_db;
+```
+
+```bash
+export DB_USERNAME=root
+export DB_PASSWORD=your_password
+export JWT_SECRET=a_secret_key_of_at_least_32_characters
+./mvnw spring-boot:run
+```
+
+## API Documentation
+
+Full interactive documentation is available via Swagger UI at
+`/swagger-ui.html` once the application is running — every endpoint can be
+tested directly from the browser, including JWT authorization via the
+"Authorize" button.
+
+Example endpoints:
+
+```
+POST   /api/auth/login
+GET    /api/appointments
+POST   /api/appointments
+PUT    /api/appointments/{id}
+GET    /api/doctors
+POST   /api/doctors          (ADMIN only)
+```
+
+## Testing
+
+```bash
+./mvnw test
+```
+
+Unit tests (JUnit 5 + Mockito) cover the service layer for `Specialty`,
+`Doctor`, and `Appointment` — including success paths, not-found scenarios,
+and business rule violations (unique CRM, unique specialty name, no
+past-dated appointments).
+
+## Project Structure
+
+```
+src/main/java/com/clinichub/
+├── config/          # Spring configuration (Security, OpenAPI)
+├── controller/      # REST controllers
+├── dto/             # Request/response DTOs
+├── exception/       # Custom exceptions and global handler
+├── mapper/          # Entity <-> DTO mapping
+├── model/           # JPA entities
+├── repository/      # Spring Data JPA repositories
+├── security/        # JWT filter, token service, user details
+└── service/         # Business logic
+
+src/main/resources/static/    # Frontend (vanilla JS, role-based dashboards)
+src/test/java/                # Unit tests
+docs/                         # Requirements, models, roadmap
+```
+
+## Author
+
+Pedro Mota
+[LinkedIn](www.linkedin.com/in/pedro-mota-43a4403a4) · [GitHub](https://github.com/pergamota)
