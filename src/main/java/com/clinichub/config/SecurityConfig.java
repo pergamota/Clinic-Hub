@@ -1,6 +1,7 @@
 package com.clinichub.config;
 
 import com.clinichub.security.JwtAuthenticationFilter;
+import org.springframework.http.HttpMethod;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
