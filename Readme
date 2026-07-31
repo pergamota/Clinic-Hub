@@ -1,10 +1,15 @@
 # ClinicHub
 
+**[Live Demo](https://clinichub-z3hm.onrender.com/index.html)** · 📄 **[API Docs (Swagger)](https://clinichub-z3hm.onrender.com/swagger-ui.html)**
+
 Intelligent Medical Clinic Management System — a full-stack Java/Spring Boot
 application simulating appointment scheduling, medical records, and exam
 management for a real clinic. Built as a portfolio project covering the full
 lifecycle of a professional Java application: modeling, REST API, security,
 containerization, testing, and documentation.
+
+> Hosted on a free tier — the first request after inactivity may take
+> 30–60 seconds to wake up the server.
 
 ## Status
 
