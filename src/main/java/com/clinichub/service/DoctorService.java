@@ -71,7 +71,14 @@ public class DoctorService {
         Specialty specialty = specialtyRepository.findById(dto.specialtyId())
         .orElseThrow(() -> new ResourceNotFoundException("Specialty not found"));
 
+        doctorRepository.findByCrm(dto.crm())
+        .filter(existingDoctor -> !existingDoctor.getId().equals(id))
+            .ifPresent(existingDoctor -> {
+            throw new BusinessRuleException("This crm is already registered");
+        });
+
         doctor.setSpecialty(specialty);
+        doctor.setCrm(dto.crm());
 
         Doctor updated = doctorRepository.save(doctor);
         return DoctorMapper.toResponseDTO(updated);
