@@ -80,11 +80,11 @@ available in [`docs/`](./docs).
 
 | Role Selection | Admin Dashboard |
 |---|---|
-![Role selection](docs/images/screenshots/Login.png) | ![Admin dashboard](docs/images/screenshots/Dashboard ADMIN.png)
+![Role selection](docs/images/screenshots/Login.png) | ![Admin Dashboard](docs/images/screenshots/ADMIN.png)
 
 | Doctor Dashboard | Patient Dashboard |
 |---|---|
-![Doctor dashboard](docs/images/screenshots/Dashboard Doctor.png) | ![Patient dashboard](docs/images/screenshots/Dashboard Patient.png) 
+![Doctor Dashboard](docs/images/screenshots/Doctor.png) | ![Patient Dashboard](docs/images/screenshots/Patient.png) 
 
 ## Entity Overview
 
